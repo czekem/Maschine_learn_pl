@@ -5,6 +5,14 @@
 # most often verb 'end' in polish language:
 # base on ( https://depot.ceon.pl/bitstream/handle/123456789/20067/Czasownik_polski.pdf?sequence=6&isAllowed=y )
 
+import pandas
+
+import click
+
+
+from pypdf import PdfReader
+import inquirer
+
 
 class MyClass:
     
@@ -28,21 +36,28 @@ class MyClass:
         if self.object[-1] in letters_2:
             self.new_list.append(self.object)   
 
-lst = ['gas', 'oil', 'water', 'chem', 'ala', 'ela']
+def file_opening():
+    filename = input('Wrote name of file: ')
+    reader = PdfReader(filename)
+    page = reader.pages[0]
+    page.extract_text()
+    
+    return page.extract_text()
 
 
-# my_obje = []
+def list_creation(opening_file):
+    lst = opening_file.split()
+    return lst
 
-# for item in lst:
-#     obj = MyClass(item)
-#     obj.check_and_append(MyClass.letters)
-#     print(obj)
-#     my_obje.append(obj)
-    
-    
-  
-    
-lst_2 = ['spała', 'biegał', 'latało', 'kichało', 'wylało', 'krowa', 'las', 'piękny',]
+
+def stop_words_delete(create_list):
+    STOPWORDS = '.,;:!?•tekstu…………się…także…'
+    new_list = []
+    for word in create_list:
+        for letter in STOPWORDS:
+            if word not in STOPWORDS:
+                new_list.append(word)
+    return new_list
 
 
 def checking_for_verb(lst):
@@ -50,14 +65,14 @@ def checking_for_verb(lst):
     This function is checking if the choosen word is a verb
     in a polish language.
     """
+    new_lst = []
     letters_2 = ['ło', 'ć', 'ał', 'ała', 'iesz', 'dzie',]  
     for item in lst:
         for word in letters_2:
             if item.endswith(word):
-                print(item)
+                new_lst.append(item)
+    print('The polish werb, without duplicates of the same word are:', set(new_lst))
                 
-
-checking_for_verb(lst_2)
 
 
 def check_for_polish_word(lst):
@@ -65,11 +80,29 @@ def check_for_polish_word(lst):
     This function is checking if the choosen 
     word is a polish(stil needed to rework on this part)
     """
+    new_lst = []
     letters = ['a','i','e','o','n','r']
     for item in lst:
         for word in letters:
             if item.startswith(word):
-                print(item)
+                new_lst.append(item)
+    print('The polis words without any duplicates of the same word are:', set(new_lst))
                 
                 
-check_for_polish_word(lst) # need to work on it.
+@click.group()
+def cli():
+    pass
+
+@cli.command()
+# @click.option('--filename', prompt='filename')
+def main():
+    opening_file = file_opening()
+    create_list = list_creation(opening_file)
+    deleting_stopwords = stop_words_delete(create_list)
+    
+
+    
+    
+    
+if __name__ == '__main__':
+    cli()
