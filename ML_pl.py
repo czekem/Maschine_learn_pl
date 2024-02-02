@@ -10,6 +10,17 @@ import pandas
 import click
 from PyPDF2 import PdfReader
 import inquirer
+from dataclasses import dataclass
+
+
+@dataclass # word in progress
+class Words:
+    MAIN_DICTIONARY = 'slownik_pl.pdf'
+    STOPWORDS = ".,;:!?•tekstu…………się…także…1)2)L=<SW)Ob(!)3)y)-(niedok.)N7Strug.2.1.6)7)6.7\n"
+    word = str
+    file = str
+    number_of_apperance = int
+    
 
 
 def writing_main_info():
