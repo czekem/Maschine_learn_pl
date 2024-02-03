@@ -20,6 +20,33 @@ class Words:
     word = str
     file = str
     number_of_apperance = int
+
+    
+    def _loading_main_file(self, MAIN_DICTIONARY):
+        STOPWORDS = '.,;:!?•tekstu…………się…także…1)2)L=<SW)Ob(!)3)y)-(niedok.)N7Strug.2.1.6)7)6.7'
+        new_lst = []
+        make_lower = []
+    
+        reader = PdfReader(MAIN_DICTIONARY)
+        num_pages = len(reader.pages)
+        full_text = ''
+
+        for page in range(num_pages):
+            full_text += reader.pages[page].extract_text()
+
+        words = full_text.split()
+    
+        for word in words:
+            if word not in STOPWORDS:
+                new_lst.append(word)
+
+        for word in new_lst:
+            word = word.lower()
+            make_lower.append(word)
+    
+        return make_lower
+
+       
     
 
 
